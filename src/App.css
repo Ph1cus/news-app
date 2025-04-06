@@ -1,0 +1,27 @@
+.productCard {
+  display: flex;    
+  gap: 20px;       
+  padding: 20px;   
+  border: 1px solid #eee; 
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+main {
+  padding: 2rem;
+}
+
+footer {
+  background: #f0f0f0;
+  padding: 1rem;
+  text-align: center;
+}
+.newsCard {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
