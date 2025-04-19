@@ -6,6 +6,7 @@ import Home from './Pages/Home/Home'
 import About from './Pages/About/About'
 import Footer from './Components/Footer'
 import NewsDetailPage from './Pages/NewsDetailPage'
+import ProfileR from './Pages/ProfileR'
 import {Box} from "@mui/material"
 
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/about" element={<About/>}/>
           <Route path= "/news/:id" element={<NewsDetailPage/>}/>
+          <Route path= "/profileR" element={<ProfileR/>}/>
         </Routes>
       </Box>
         

@@ -6,6 +6,7 @@ import AuthModal from "../AuthModel";
 import { useEffect } from "react";
 import { auth } from "/src/firebase"; 
 import { onAuthStateChanged, getAuth, signOut  } from "firebase/auth";
+import { Link as RouterLink} from 'react-router-dom';
 
 
 
@@ -37,6 +38,7 @@ const Header = () => {
         <Box 
           component="header" 
           sx={{ 
+            position: "relative",
             py: 1, 
             backgroundColor: "primary.main", 
             color: "white",
@@ -52,17 +54,28 @@ const Header = () => {
               }}
             >
               
-              <Typography variant="h6" component="div">
-                News
-              </Typography>
+              <Box
+                  sx={{ 
+                  position: "absolute", // Виводить елемент за межі контейнера
+                  left: 20, // Прикріплює його до правого краю екрану
+                  top: "50%", // Вертикальне розташування (по центру)
+                  transform: "translateY(-50%)", // Для точного центрування
+
+                  }}> 
+                    <Typography variant="h5">News</Typography>
+                </Box>
     
               
               
-              <Box component="nav" sx={{ display: "flex", gap: 2}}>
+              <Box component="nav" sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center"}}> 
                 <Link href="/" color="inherit" underline="hover">Home</Link>
                 <Link href="/search" color="inherit" underline="hover">Пошук</Link>
                 <Link href="/about" color="inherit" underline="hover">Про нас</Link>
-              </Box>
+              </Box> 
+              
+              
+
+              
               {currentUser ? 
               (<Button onClick={handleLogout}
               sx={{
@@ -85,9 +98,31 @@ const Header = () => {
                 Login           
               </Button>)
               }
-              
-              
               <AuthModal open={openAuth} onClose={() => setOpenAuth(false)} />
+
+
+                <Box
+                  sx={{
+                  position: "absolute", // Виводить елемент за межі контейнера
+                  right: 20, // Прикріплює його до правого краю екрану
+                  top: "50%", // Вертикальне розташування (по центру)
+                  transform: "translateY(-50%)", // Для точного центрування
+                  zIndex: 10, // Щоб логотип був поверх інших елементів
+                  }}>  
+              <Button 
+                component={RouterLink}
+                to="/profileR"
+                sx={{
+                bgcolor: "black", // Фон
+                color: "white", // Колір тексту
+                "&:hover": { bgcolor: "#333" }, // Ховер
+                borderRadius: "20px", // Закруглення
+                px: 1, // Горизонтальний паддінг
+                
+                 }}>
+                Profile           
+              </Button>
+              </Box>
             </Box>
           </Container>
         </Box>

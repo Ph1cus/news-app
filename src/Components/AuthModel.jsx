@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, Box } from "@mui/material";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut  } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
 import { useEffect } from "react";
 
 
@@ -32,16 +32,7 @@ export default function AuthModal({ open, onClose }) {
   };
 
 
-  const handleLogout = () => {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        console.log("Вихід успішний");
-      })
-      .catch((error) => {
-        console.error("Помилка при виході:", error.message);
-      });
-  };
+
 
 
 
