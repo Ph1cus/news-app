@@ -7,25 +7,38 @@ import { Button, Container, Typography } from "@mui/material";
 function NewsDetailPage() {
     const { id } = useParams();
     const [newsItem, setNewsItem] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
         const fetchFullNews = async () => {
+        setLoading (true);
+        setNotFound(false);
+
+        try{
             const docRef = doc(db, "news", id);
-            console.log(id);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 setNewsItem(docSnap.data());
-                console.log(docSnap.exists())
+                
             } else {
-                console.log("Такої новини не знайдено");
+                setNotFound(true);
             }
-        };
+            } catch (error) {
+                
+                setNotFound(true)
+            } finally {
+                setLoading(false);
+            }
 
+        };
+            
         fetchFullNews();
     }, [id]);
 
-    if (!newsItem) return <p>Завантаження...</p>;
+    if (loading) return <Typography variant="h6">Завантаення.......   .</Typography>
+    if (notFound) return <Typography variant="h6">Пу пу пуууу</Typography>
 
     return (
         <Container>

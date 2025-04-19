@@ -23,7 +23,7 @@ function About (){
                 <Card>
                     <CardContent>
                         <Typography variant="h6" sx={{marginBottom: 2, textAlign: "center"}}> Фікус Ігнатович:</Typography>
-                        <Typography variant="body3" >Роль: Поки НІХТО</Typography>
+                        <Typography variant="body3" >Роль: Кітичок &lt;3</Typography>
                     </CardContent>
                 </Card>
             </Grid>
