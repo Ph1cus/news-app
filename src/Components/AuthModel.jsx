@@ -9,10 +9,10 @@ import useAuthStore from "./AuthStore";
 
 
 export default function AuthModal({ open, onClose }) {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {setUser, setRole} = useAuthStore();
+  const {setUser, clearUser} = useAuthStore();
 
 
 
@@ -33,11 +33,10 @@ export default function AuthModal({ open, onClose }) {
 
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
-        const role = userDoc.data().role;
-        setRole(role);
+        const data = userDoc.data();
+        setUser(data); 
       } else {
-        console.log("User document not found in Firestore");
-        setRole(null);
+        clearUser(); 
       }
     
       console.log("Logging in with:", email, password);
@@ -53,7 +52,6 @@ export default function AuthModal({ open, onClose }) {
       });
 
       setUser(user); 
-      setRole("user");
 
       console.log("Registering with:", email, password);
     }

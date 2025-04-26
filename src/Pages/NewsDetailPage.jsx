@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "/Programs/reactapp/news-portal/src/firebase";
+import { db } from "/src/firebase";
 import { useEffect, useState } from "react";
 import { Button, Container, Typography } from "@mui/material";
 

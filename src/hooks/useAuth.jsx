@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const useAuth = () => {
-  const { setUser, setRole } = useAuthStore(); 
+  const { setUser, clearUser } = useAuthStore(); 
 
 
   useEffect(() => {
@@ -13,24 +13,21 @@ const useAuth = () => {
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser);
-
-        
+        // setUser(firebaseUser);
         const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
-          setRole(data.role); 
+          setUser(data); 
         } else {
-          setRole(null); 
+          clearUser(); 
         }
       } else {
-        setUser(null);
-        setRole(null);
+        clearUser();
       }
     });
 
     return () => unsubscribe();
-  }, [setUser, setRole]);
+  }, [setUser, clearUser]);
 
   const logout = () => {
     const auth = getAuth();

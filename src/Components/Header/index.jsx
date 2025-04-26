@@ -13,27 +13,28 @@ import useAuthStore from '/src/Components/AuthStore'
 
 const Header = () => {
   const [openAuth, setOpenAuth] = useState(false);
-  const { user, role, setUser, setRole } = useAuthStore(); // Отримуємо user та role з Zustand
+  const { user, setUser, clearUser } = useAuthStore(); // Отримуємо user та role з Zustand
 
 
   useEffect(() => {
-    
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => { // <<< async тут!
       if (firebaseUser) {
-        setUser(firebaseUser);
-        
-        firebaseUser.getIdTokenResult().then((idTokenResult) => {
-          // console.log("Клейми:", idTokenResult.claims);
-          setRole(idTokenResult.claims.role || "user"); 
+        const token = await firebaseUser.getIdTokenResult(); // <<< тут правильний метод
+        const role = token.claims.role || "user";
+  
+        setUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          role: role
         });
       } else {
-        setUser(null);
-        setRole(null);
+        clearUser();
       }
     });
-
+  
     return () => unsubscribe();
-  }, [auth, setUser, setRole]);
+  }, [setUser, clearUser]);
+  
 
   const handleLogout = () => {
     signOut(auth)
@@ -123,7 +124,7 @@ const Header = () => {
                   }}>  
               <Button 
                 component={RouterLink}
-                to = {role === "admin" ? "/profileA" : "/profileR"}
+                to = {user?.role === "admin" ? "/profileA" : "/profileR"}
                 sx={{
                 bgcolor: "black", // Фон
                 color: "white", // Колір тексту
