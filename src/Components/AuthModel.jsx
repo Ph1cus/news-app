@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, Box } from "@mui/material";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
 import { useEffect } from "react";
+import { doc, setDoc, getDoc  } from "firebase/firestore";
+import { db } from "../firebase"; 
+import useAuthStore from "./AuthStore";
+
 
 
 export default function AuthModal({ open, onClose }) {
   const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {setUser, setRole} = useAuthStore();
+
+
+
   useEffect(() => {
     setEmail("");
     setPassword("");
@@ -19,9 +27,34 @@ export default function AuthModal({ open, onClose }) {
     try{
       if (isLogin) {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      setUser(user);
+
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const role = userDoc.data().role;
+        setRole(role);
+      } else {
+        console.log("User document not found in Firestore");
+        setRole(null);
+      }
+    
       console.log("Logging in with:", email, password);
+
     } else {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      email: user.email,
+      role: "user", 
+      });
+
+      setUser(user); 
+      setRole("user");
+
       console.log("Registering with:", email, password);
     }
     onClose();

@@ -7,11 +7,13 @@ import About from './Pages/About/About'
 import Footer from './Components/Footer'
 import NewsDetailPage from './Pages/NewsDetailPage'
 import ProfileR from './Pages/ProfileR'
+import ProfileA from './Pages/profileA'
+import useLoadUserRole from '../src/hooks/useLoadUserRole'
 import {Box} from "@mui/material"
 
 
 function App() {
-  
+  useLoadUserRole();
   return (
     <Box
     display="flex"
@@ -27,6 +29,7 @@ function App() {
           <Route path="/about" element={<About/>}/>
           <Route path= "/news/:id" element={<NewsDetailPage/>}/>
           <Route path= "/profileR" element={<ProfileR/>}/>
+          <Route path= "/profileA" element={<ProfileA/>}/>
         </Routes>
       </Box>
         
@@ -41,3 +44,5 @@ function App() {
 }
 
 export default App
+
+// w@gmail.com qqqqqqqq

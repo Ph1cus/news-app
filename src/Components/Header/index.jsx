@@ -7,31 +7,43 @@ import { useEffect } from "react";
 import { auth } from "/src/firebase"; 
 import { onAuthStateChanged, getAuth, signOut  } from "firebase/auth";
 import { Link as RouterLink} from 'react-router-dom';
+import useAuthStore from '/src/Components/AuthStore'
 
 
 
 const Header = () => {
   const [openAuth, setOpenAuth] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user, role, setUser, setRole } = useAuthStore(); // Отримуємо user та role з Zustand
+
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user); 
-    });
-  
-    return () => unsubscribe(); 
-  }, []);
-
-    const handleLogout = () => {
-      const auth = getAuth();
-      signOut(auth)
-        .then(() => {
-          console.log("Вихід успішний");
-        })
-        .catch((error) => {
-          console.error("Помилка при виході:", error.message);
+    
+    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        
+        firebaseUser.getIdTokenResult().then((idTokenResult) => {
+          // console.log("Клейми:", idTokenResult.claims);
+          setRole(idTokenResult.claims.role || "user"); 
         });
-    };
+      } else {
+        setUser(null);
+        setRole(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, setUser, setRole]);
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Вихід успішний");
+      })
+      .catch((error) => {
+        console.error("Помилка при виході:", error.message);
+      });
+  };
   
     return (
       
@@ -76,7 +88,7 @@ const Header = () => {
               
 
               
-              {currentUser ? 
+              {user  ? 
               (<Button onClick={handleLogout}
               sx={{
                 bgcolor: "red", // Фон
@@ -111,7 +123,7 @@ const Header = () => {
                   }}>  
               <Button 
                 component={RouterLink}
-                to="/profileR"
+                to = {role === "admin" ? "/profileA" : "/profileR"}
                 sx={{
                 bgcolor: "black", // Фон
                 color: "white", // Колір тексту
@@ -122,6 +134,7 @@ const Header = () => {
                  }}>
                 Profile           
               </Button>
+
               </Box>
             </Box>
           </Container>
