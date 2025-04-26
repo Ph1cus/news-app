@@ -8,12 +8,12 @@ import Footer from './Components/Footer'
 import NewsDetailPage from './Pages/NewsDetailPage'
 import ProfileR from './Pages/ProfileR'
 import ProfileA from './Pages/profileA'
-import useLoadUserRole from '../src/hooks/useLoadUserRole'
+import useAuth from './hooks/useAuth'
 import {Box} from "@mui/material"
 
 
 function App() {
-  useLoadUserRole();
+  useAuth();
   return (
     <Box
     display="flex"

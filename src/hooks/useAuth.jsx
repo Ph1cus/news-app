@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import useAuthStore from "../store/authStore"; 
+import useAuthStore from "../Components/AuthStore"; 
 import { doc, getDoc } from "firebase/firestore"; 
 import { db } from "../firebase";
 
 const useAuth = () => {
-  const { setUser, setRole, setLoading } = useAuthStore(); 
-  const [user, role] = useAuthStore((state) => [state.user, state.role]);
+  const { setUser, setRole } = useAuthStore(); 
+
 
   useEffect(() => {
     const auth = getAuth();
@@ -30,14 +30,12 @@ const useAuth = () => {
     });
 
     return () => unsubscribe();
-  }, [setUser, setRole, setLoading]);
+  }, [setUser, setRole]);
 
   const logout = () => {
     const auth = getAuth();
     auth.signOut();
   };
-
-  return { user, role, logout };
 };
 
 export default useAuth;
