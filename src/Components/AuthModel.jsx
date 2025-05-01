@@ -49,6 +49,9 @@ export default function AuthModal({ open, onClose }) {
       uid: user.uid,
       email: user.email,
       role: "user", 
+      name: "user",       
+      bio: "",        
+      avatar: "",
       });
 
       setUser(user); 

@@ -124,7 +124,7 @@ const Header = () => {
                   }}>  
               <Button 
                 component={RouterLink}
-                to = {user?.role === "admin" ? "/profileA" : "/profileR"}
+                to =  {"/profileR"}
                 sx={{
                 bgcolor: "black", // Фон
                 color: "white", // Колір тексту
