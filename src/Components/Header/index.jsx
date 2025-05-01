@@ -1,7 +1,5 @@
-//import  "./style.css";
-//import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { Box, Typography, Container, Link, Button } from "@mui/material";
+import { Box, Typography, Container, Link, Button, TextField } from "@mui/material";
 import AuthModal from "../AuthModel";
 import { useEffect } from "react";
 import { auth } from "/src/firebase"; 
@@ -13,13 +11,13 @@ import useAuthStore from '/src/Components/AuthStore'
 
 const Header = () => {
   const [openAuth, setOpenAuth] = useState(false);
-  const { user, setUser, clearUser } = useAuthStore(); // Отримуємо user та role з Zustand
+  const { user, setUser, clearUser, searchQuery, setSearchQuery } = useAuthStore(); 
 
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => { // <<< async тут!
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => { 
       if (firebaseUser) {
-        const token = await firebaseUser.getIdTokenResult(); // <<< тут правильний метод
+        const token = await firebaseUser.getIdTokenResult(); 
         const role = token.claims.role || "user";
   
         setUser({
@@ -80,10 +78,17 @@ const Header = () => {
     
               
               
-              <Box component="nav" sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center"}}> 
+              <Box component="nav" sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center", alignItems:"center"}}> 
                 <Link href="/" color="inherit" underline="hover">Home</Link>
-                <Link href="/search" color="inherit" underline="hover">Пошук</Link>
                 <Link href="/about" color="inherit" underline="hover">Про нас</Link>
+                <TextField
+                label="Пошук новини"
+                variant="outlined"
+                size="small"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                sx={{ backgroundColor: "white", borderRadius: 1, ml: 2 }}
+              />
               </Box> 
               
               

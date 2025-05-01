@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import './Home.css'
+import useAuthStore from "../../Components/AuthStore";
 
 
 
 function Home(){
 const [news, setNews] = useState([]);
+const {searchQuery} = useAuthStore();
 
 useEffect (() => {
   const fetchNews = async () => {
@@ -25,9 +27,12 @@ useEffect (() => {
   fetchNews();
 
 }, []);
+const filteredNews = news.filter((item) =>
+  item.title.toLowerCase().includes(searchQuery.toLowerCase())
+);
       return(
         <main className="news-grid">
-            {news.map(item =>(
+            {filteredNews.map(item =>(
             <NewsCard
             key={item.id}
             id={item.id}
