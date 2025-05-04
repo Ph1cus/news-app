@@ -1,6 +1,6 @@
 import NewsCard from "../../Components/News-card";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import './Home.css'
 import useAuthStore from "../../Components/AuthStore";
@@ -9,7 +9,16 @@ import useAuthStore from "../../Components/AuthStore";
 
 function Home(){
 const [news, setNews] = useState([]);
-const {searchQuery} = useAuthStore();
+const { searchQuery} = useAuthStore();
+
+const handleNewsDelete = async (idToDelete) => {
+  try {
+    await deleteDoc(doc(db, "news", idToDelete)); 
+    setNews(prev => prev.filter(item => item.id !== idToDelete)); 
+  } catch (error) {
+    console.error("Помилка при видаленні новини:", error);
+  }
+};
 
 useEffect (() => {
   const fetchNews = async () => {
@@ -40,7 +49,7 @@ const filteredNews = news.filter((item) =>
             desc={item.desc}
             date={item.date}
             author={item.author}
-            
+            onDelete={handleNewsDelete}
             />
           ))}
           

@@ -61,7 +61,7 @@ const Header = () => {
               sx={{ 
                 display: "flex", 
                 justifyContent: "space-between", 
-                alignItems: "center" 
+                alignItems: "center"
               }}
             >
               
@@ -87,7 +87,7 @@ const Header = () => {
                 size="small"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                sx={{ backgroundColor: "white", borderRadius: 1, ml: 2 }}
+                sx={{ backgroundColor: "white", borderRadius: 1, ml: 2}}
               />
               </Box> 
               

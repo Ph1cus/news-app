@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import {db } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import useAuthStore from "./AuthStore";
 
 const AddNewsForm = () => {
   const [title, setTitle] = useState("");
@@ -9,6 +10,19 @@ const AddNewsForm = () => {
   const [date, setDate] = useState("");
   const [author, setAuthor] = useState("");
   const [fullContent, setFullContent] = useState("");
+  const {user} = useAuthStore();
+
+  useEffect(() => {
+    const now = new Date();
+    const formattedDate = now.toISOString().split("T")[0]; 
+    setDate(formattedDate);
+
+    if (user?.name){
+      setAuthor(user.name);
+    }
+
+  }, [user]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,49 +55,48 @@ const AddNewsForm = () => {
         alert("Не вдалося додати новину.");
       }
     };
-    // Тут буде код для збереження в Firebase або інший бекенд
+  
   
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <><Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <TextField
         label="Заголовок"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        required
-      />
+        required />
       <TextField
         label="Опис"
         value={desc}
         onChange={(e) => setDesc(e.target.value)}
         required
         multiline
-        rows={4}
-      />
+        rows={4} />
       <TextField
         label="Дата"
+        type ="date"  
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        required
-      />
+        required />
       <TextField
         label="Автор"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
-        required
-      />
+        required />
       <TextField
         label="Текст новини"
         value={fullContent}
         onChange={(e) => setFullContent(e.target.value)}
         required
         multiline
-        rows={6}
-      />
-      <Button type="submit" variant="contained" color="primary">
-        Додати новину
-      </Button>
-    </Box>
+        rows={6}/>
+  <Box sx={{ mt: 5 }}>
+    <Button type="submit" variant="contained" color="primary">
+      Додати новину
+    </Button>
+  </Box>
+  </Box></>
+    
   );
 };
 

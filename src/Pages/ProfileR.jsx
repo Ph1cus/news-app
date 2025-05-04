@@ -105,7 +105,9 @@ const {user} = useAuthStore();
                 ) : (
                 <>
                 <Typography variant="h4">{userProfile.name}</Typography>
-                <Button size="small" variant="contained" onClick={() => setIsEditingName(true)}>Edit</Button>
+                <Button size="small" variant="contained" onClick={() => {
+                  setEditedName(userProfile.name);
+                  setIsEditingName(true)}}>Edit</Button>
                 </>
                 )}
                 </Box>
@@ -129,12 +131,15 @@ const {user} = useAuthStore();
             ) : (
                 <>
                 <Typography variant="body2" sx={{textAlign:"justify"}} >{userProfile.bio}</Typography>
-                <Button size="small" variant="contained" sx={{mt:4}} onClick={() => setIsEditingBio(true)}>Edit</Button>
+                <Button size="small" variant="contained" sx={{mt:4}} onClick={() => {
+                  setEditedBio(userProfile.bio);
+                  setIsEditingBio(true);
+                }}>Edit</Button>
                 </>
             )}
             </Box>
             <Box sx={{mt: 5}}>
-            {user.role === "admin" && (
+            {user?.role === "admin" && (
                 
                 <Button 
                 component ={Link}
