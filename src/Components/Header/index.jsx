@@ -37,6 +37,7 @@ const Header = () => {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
+        alert("Вихід успішний");
         console.log("Вихід успішний");
       })
       .catch((error) => {
@@ -52,8 +53,7 @@ const Header = () => {
             position: "relative",
             py: 1, 
             backgroundColor: "primary.main", 
-            color: "white",
-            
+            color: "white"
           }}
         >
           <Container maxWidth="lg">
@@ -67,10 +67,10 @@ const Header = () => {
               
               <Box
                   sx={{ 
-                  position: "absolute", // Виводить елемент за межі контейнера
-                  left: 20, // Прикріплює його до правого краю екрану
-                  top: "50%", // Вертикальне розташування (по центру)
-                  transform: "translateY(-50%)", // Для точного центрування
+                  position: "absolute", 
+                  left: 20, 
+                  top: "50%", 
+                  transform: "translateY(-50%)", 
 
                   }}> 
                     <Typography variant="h5">News</Typography>
@@ -78,16 +78,22 @@ const Header = () => {
     
               
               
-              <Box component="nav" sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center", alignItems:"center"}}> 
+              <Box component="nav" sx={{ 
+                display: "flex", 
+                gap: 2, 
+                flexGrow: 1, 
+                justifyContent: "center", 
+                alignItems:"center"}}> 
                 <Link href="/" color="inherit" underline="hover">Home</Link>
                 <Link href="/about" color="inherit" underline="hover">Про нас</Link>
+
                 <TextField
-                label="Пошук новини"
+                placeholder="Пошук новини"
                 variant="outlined"
                 size="small"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                sx={{ backgroundColor: "white", borderRadius: 1, ml: 2}}
+                sx={{ backgroundColor: "white", borderRadius: 1, ml: 2, minWidth: 200}}
               />
               </Box> 
               
@@ -97,21 +103,21 @@ const Header = () => {
               {user  ? 
               (<Button onClick={handleLogout}
               sx={{
-                bgcolor: "red", // Фон
-                color: "white", // Колір тексту
-                "&:hover": { bgcolor: "#333" }, // Ховер
-                borderRadius: "20px", // Закруглення
-                px: 1, // Горизонтальний паддінг
+                bgcolor: "red",
+                color: "white", 
+                "&:hover": { bgcolor: "#333" },
+                borderRadius: "20px", 
+                px: 1, 
                  }}>
                 Logout
               </Button>):
               (<Button onClick={() => setOpenAuth(true)}
               sx={{
-                bgcolor: "green", // Фон
-                color: "white", // Колір тексту
-                "&:hover": { bgcolor: "#333" }, // Ховер
-                borderRadius: "20px", // Закруглення
-                px: 1, // Горизонтальний паддінг
+                bgcolor: "green", 
+                color: "white", 
+                "&:hover": { bgcolor: "#333" }, 
+                borderRadius: "20px", 
+                px: 1, 
                  }}>
                 Login           
               </Button>)
@@ -121,21 +127,21 @@ const Header = () => {
 
                 <Box
                   sx={{
-                  position: "absolute", // Виводить елемент за межі контейнера
-                  right: 20, // Прикріплює його до правого краю екрану
-                  top: "50%", // Вертикальне розташування (по центру)
-                  transform: "translateY(-50%)", // Для точного центрування
-                  zIndex: 10, // Щоб логотип був поверх інших елементів
+                  position: "absolute", 
+                  right: 20, 
+                  top: "50%", 
+                  transform: "translateY(-50%)", 
+                  zIndex: 10, 
                   }}>  
               <Button 
                 component={RouterLink}
                 to =  {"/profileR"}
                 sx={{
-                bgcolor: "black", // Фон
-                color: "white", // Колір тексту
-                "&:hover": { bgcolor: "#333" }, // Ховер
-                borderRadius: "20px", // Закруглення
-                px: 1, // Горизонтальний паддінг
+                bgcolor: "black", 
+                color: "white", 
+                "&:hover": { bgcolor: "#333" }, 
+                borderRadius: "20px", 
+                px: 1, 
                 
                  }}>
                 Profile           

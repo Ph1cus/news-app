@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import useAuthStore from "../Components/AuthStore";
 import {doc, deleteDoc } from "firebase/firestore"
 import { db } from "/src/firebase";
+import FavoriteButton from "./FavoriteButton";
 
 
 
@@ -20,7 +21,16 @@ function NewsCard({id, title, desc, date, author, onDelete  }){
     return (
         <div className="newsCard">
             
-            <h3>{title}</h3>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 style={{ margin: 0 }}>{title}</h3>
+            {user && (
+              <FavoriteButton 
+                userId={user.uid} 
+                newsId={id} 
+                newsTitle={title} 
+              />
+            )}
+          </Box>
             <p>{desc}</p>
             <small>{date}</small>
             <Author nickname={author}/>

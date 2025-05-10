@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter, Routes, Route  } from 'react-router-dom'
 import './App.css'
 import Header from './Components/Header'
@@ -10,11 +9,13 @@ import ProfileR from './Pages/ProfileR'
 import ProfileA from './Pages/profileA'
 import useAuth from './hooks/useAuth'
 import {Box} from "@mui/material"
+import ErrorBoundary from './Components/ErrorBoundary'
 
 
 function App() {
   useAuth();
   return (
+    <ErrorBoundary>
     <Box
     display="flex"
     flexDirection="column"
@@ -37,12 +38,10 @@ function App() {
       <Footer/>
       </BrowserRouter>
     </Box>
-          
+    </ErrorBoundary>
   
       
   )
 }
 
 export default App
-
-// w@gmail.com qqqqqqqq

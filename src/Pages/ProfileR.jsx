@@ -1,12 +1,11 @@
-import {Container, Typography, Avatar,  Box, Button, TextField} from "@mui/material";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {Container, Typography, Avatar,  Box, Button, TextField, Card, CardContent} from "@mui/material";
+import { doc, getDoc, updateDoc, query, where, collection , getDocs, deleteDoc} from "firebase/firestore";
 import { db } from "/src/firebase";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import useAuthStore from "../Components/AuthStore";
 import { Link } from "react-router-dom";
-
-
+import EditableField from "../Components/EditableFields";
 
 function ProfileR (){
     const auth = getAuth();
@@ -15,15 +14,13 @@ function ProfileR (){
 const [userProfile, setUserProfile] = useState(null);
 const [loading, setLoading] = useState(true);
 const [notFound, setNotFound] = useState(false);
-const [isEditingName, setIsEditingName] = useState(false);
-const [isEditingBio, setIsEditingBio] = useState(false);
-const [editedName, setEditedName] = useState(userProfile?.name || '');
-const [editedBio, setEditedBio] = useState(userProfile?.bio || '');
 const {user} = useAuthStore();
+const [favorites, setFavorites] = useState([]);
 
 
-
-
+const handleRemoveFavorite = async (favoriteId) => {
+    await deleteDoc(doc(db, "favorites", favoriteId));
+    setFavorites((prev) => prev.filter((fav) => fav.id !== favoriteId));}
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -47,112 +44,143 @@ const {user} = useAuthStore();
         };
       
         fetchUserProfile();
+
+        const fetchFavorites = async () => {
+          if (!uid) return;
+      
+          try {
+            const q = query(
+              collection(db, "favorites"),
+              where("userId", "==", uid)
+            );
+            const querySnapshot = await getDocs(q);
+            const favs = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setFavorites(favs);
+          } catch (error) {
+            console.error("Помилка при завантаженні обраного:", error);
+          }
+        };
+      
+        fetchFavorites();
+      
+
+
       }, [uid]);
+
+
       if (loading) return <Typography variant="h6">Завантаення.......   .</Typography>
       if (notFound) return <Typography variant="h6">Пу пу пуууу</Typography>
 
-      const handleSaveName = async () => {
-        try {
-          const userRef = doc(db, "users", uid);  
-          await updateDoc(userRef, { name: editedName });  
-          setUserProfile((prev) => ({ ...prev, name: editedName }));  
-          setIsEditingName(false);  
-        } catch (error) {
-          console.error("Помилка при збереженні імені:", error);
-        }
-      };
-
-      
-
-
-      const handleSaveBio = async () => {
-        try {
-          const userRef = doc(db, "users", uid);  
-          await updateDoc(userRef, { bio: editedBio });  
-          setUserProfile((prev) => ({ ...prev, bio: editedBio }));  
-          setIsEditingBio(false);  
-        } catch (error) {
-          console.error("Помилка при збереженні біо:", error);
-        }
-      };
-      
-
-
-
-
-
     return(
-        <Container>
-            <Box  sx={{display : "flex", gap: 4, alignItems:"center", justifyContent: "left", mb: 6}}>
-                <Avatar src="/img/img1.jpg"
-                sx={{
-                    width: { xs: 60, sm: 80, md: 100 }, 
-                    height: { xs: 60, sm: 80, md: 100 }, 
-                    boxShadow: 4, 
-                  }} />
-                
+      <Box sx={{ maxWidth: "1400px", mx: "auto", px: 2, mt: 4 }}>
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 4 }}>
 
-                {isEditingName ? (
-                <>
-                <TextField
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                size="small"
+        {/* Ліва колонка */}
+        <Box sx={{ flex: 1 }}>
+          <Card sx={{ p: 3, mb: 4 }}>
+            <CardContent>
+              <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <Avatar
+                  src="/img/img1.jpg"
+                  sx={{
+                    width: { xs: 60, sm: 80, md: 100 },
+                    height: { xs: 60, sm: 80, md: 100 },
+                    boxShadow: 4,
+                  }}
                 />
-                <Button variant="contained" onClick={handleSaveName}>Save</Button>
-                <Button variant="contained" onClick={() => setIsEditingName(false)}>Cancel</Button>
-                </>
-                ) : (
-                <>
-                <Typography variant="h4">{userProfile.name}</Typography>
-                <Button size="small" variant="contained" onClick={() => {
-                  setEditedName(userProfile.name);
-                  setIsEditingName(true)}}>Edit</Button>
-                </>
-                )}
-                </Box>
-            <Box>
-            {isEditingBio ? (
-                <>
-                <TextField
-                    multiline
-                    fullWidth
-                    value={editedBio}
-                    onChange={(e) => setEditedBio(e.target.value)}
-                    rows={4}
-                    sx={{ mb: 2 }}
+                <EditableField
+                  value={userProfile.name}
+                  label="Ім’я"
+                  onSave={async (newName) => {
+                    const userRef = doc(db, "users", uid);
+                    await updateDoc(userRef, { name: newName });
+                    setUserProfile((prev) => ({ ...prev, name: newName }));
+                  }}
+                  textVariant="h4"
                 />
-                <Box sx={{display : "flex", gap: 3}}>
-                <Button variant="contained" onClick={handleSaveBio}>Save</Button>
-                <Button variant="contained" onClick={() => setIsEditingBio(false)}>Cancel</Button>
-                </Box>
+              </Box>
+            </CardContent>
+          </Card>
 
-                </>
-            ) : (
-                <>
-                <Typography variant="body2" sx={{textAlign:"justify"}} >{userProfile.bio}</Typography>
-                <Button size="small" variant="contained" sx={{mt:4}} onClick={() => {
-                  setEditedBio(userProfile.bio);
-                  setIsEditingBio(true);
-                }}>Edit</Button>
-                </>
-            )}
+          <Card sx={{ p: 3 }}>
+            <EditableField
+              value={userProfile.bio}
+              label="Біографія"
+              onSave={async (newBio) => {
+                const userRef = doc(db, "users", uid);
+                await updateDoc(userRef, { bio: newBio });
+                setUserProfile((prev) => ({ ...prev, bio: newBio }));
+              }}
+              multiline
+            />
+          {/* Кнопка для адміна */}
+          {user?.role === "admin" && (
+            <Box sx={{ mt: 4 }}>
+              <Button component={Link} to="/profileA" variant="contained">
+                Кнопка для адміна
+              </Button>
             </Box>
-            <Box sx={{mt: 5}}>
-            {user?.role === "admin" && (
-                
-                <Button 
-                component ={Link}
-                to={"/profileA"}
-                variant="contained" 
-                >
-                    кнопка для адміна
-                </Button>
-            )}
+          )}
+        
+          </Card>
+</Box>
+
+        {/* Права колонка: Обрані */}
+        <Box sx={{ flex: 1 }}>
+          <Card sx={{ p: 3, height: "91%" }}>
+          <Typography variant="h4" gutterBottom>
+            <b>Обрані</b>
+          </Typography>
+
+{favorites.length > 0 ? (
+  favorites.map((fav) => (
+    <Box
+      key={fav.id}
+      sx={{
+        display: "flex",
+        
+        alignItems: "center",
+        mb: 2,
+        p: 1,
+        border: "1px solid #ccc",
+        borderRadius: 2,
+      }}
+    >
+      <Typography sx={{ flex: 1 }}>{fav.newsTitle}</Typography>
+      <Box sx={{ mx: "auto" }}>
+      <Button
+        onClick={() => handleRemoveFavorite(fav.id)}
+        variant="contained"
+        size="small"
+      >
+          Видалити з обраних
+      </Button>
+    </Box>
+
+      <Button
+        component={Link}
+        to={`/news/${fav.newsId}`}
+        variant="contained"
+        size="small"
+        sx={{ ml: 2}}
+      >
+                Перейти
+              </Button>
             </Box>
-           
-            
-        </Container>
+          ))
+        ) : (
+          <Typography>Немає обраних новин.</Typography>
+        )}
+
+          </Card>
+        </Box>
+      </Box>
+    </Box>
+
+
         
         
     )

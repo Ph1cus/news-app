@@ -38,7 +38,7 @@ export default function AuthModal({ open, onClose }) {
       } else {
         clearUser(); 
       }
-    
+      alert("Авторизація успішна");
       console.log("Logging in with:", email, password);
 
     } else {
@@ -57,6 +57,7 @@ export default function AuthModal({ open, onClose }) {
       setUser(user); 
 
       console.log("Registering with:", email, password);
+      alert("Користувача зареєстровано");
     }
     onClose();
     }

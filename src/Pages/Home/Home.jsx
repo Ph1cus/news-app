@@ -14,7 +14,8 @@ const { searchQuery} = useAuthStore();
 const handleNewsDelete = async (idToDelete) => {
   try {
     await deleteDoc(doc(db, "news", idToDelete)); 
-    setNews(prev => prev.filter(item => item.id !== idToDelete)); 
+    setNews(prev => prev.filter(item => item.id !== idToDelete));
+    alert("Новину видалено"); 
   } catch (error) {
     console.error("Помилка при видаленні новини:", error);
   }

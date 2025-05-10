@@ -27,7 +27,6 @@ const Footer = () => {
               
               <Box component="nav" sx={{ display: "flex", gap: 2 }}>
                 <Link href="/" color="inherit" underline="hover">Home</Link>
-                <Link href="/search" color="inherit" underline="hover">Пошук</Link>
                 <Link href="/about" color="inherit" underline="hover">Про нас</Link>
               </Box>
             </Box>
