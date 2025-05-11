@@ -41,7 +41,10 @@ const FavoriteButton = ({ userId, newsId, newsTitle }) => {
 
   return (
     <Tooltip title={isFavorite ? "Прибрати з обраного" : "Додати в обране"}>
-      <IconButton onClick={toggleFavorite} color={isFavorite ? "error" : "default"}>
+      <IconButton
+        onClick={toggleFavorite}
+        color={isFavorite ? "error" : "default"}
+      >
         {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </IconButton>
     </Tooltip>
